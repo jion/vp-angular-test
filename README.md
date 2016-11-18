@@ -1,62 +1,65 @@
-#Display Contacts/Outlets Coding Exercise
-For this exercise, you will create a web page that will read in and display a collection of Media Contacts and thier Outlets. 
-
-##Requirements
-The following requirements apply:
-
-1. The application should read in the supplied Outlet and Contact data to use for display
-2. Records should be shown in a grid type control with the following information:
-
-  * Contact Name (First and Last)
-  * Contact Title
-  * Outlet name (outlet that they are associated with using the OutletId)
-  * Contact Profile
-
-3. The grid should be sortable
-4. Paging should be implemented so that there are 25 contacts per page
-5. The grid should be styled so that every other row is highlighted/shaded
-6. The application can be in any format you wish (e.g. console app, windows app, web app, etc…)
-7. The finished application should have no external dependencies (e.g. a database connection)
-8. Feel free to use any third party/open source libraries
-9. Delivery of project can be via zip file, GitHub repository or other
-
-##Data Format
-Included in this project are two JSON files, one that defines Outlets and one that defines Contacts that belong to outlets. The structure of the data is defined as follows:
-
-| Outlet                   |
-|--------------------------|
-| Id - int                 |
-| Name - string            |
-| Contacts - List<Contact> |
-
-
-| Contact            |
-|--------------------|
-| Id - int           |
-| OutletId - int     |
-| FirstName - string |
-| LastName - string  |
-| Title - string     |
-| Profile - string   |
-
-When reading in the JSON data, Contacts should be related to thier parent Outlet.
-
-####Example Outlet Data:
-```
-{
-  "id": 1374048,
-  "name": "Educational Marketer"
-},
+# Dependencies
+* Node http-server:
+```bash
+node install -g http-server
 ```
 
-####Example Contact Data:
+# Instructions to run
+
+1. Clone the repo
+2. Run node http-server:
+```bash
+http-server
 ```
-{
-  "id": 4415401,
-  "outletId": 1374048,
-  "firstName": "Kathleen",
-  "lastName": "Mickey",
-  "title": "Managing Editor",
-  "profile": "Mickey is the Managing Editor for Educational Marketer and Electronic Education Report and covers Print and Electronic Educational Publishing. Do not send photographs or article submissions as they only accept story ideas and press releases. She can be contacted via e-mail.  Mickey has served as the managing editor for Educational Marketer and Electronic Education Report since 2000."
-},
-```
+3. Load the url provided by the server
+
+# First approach: jQuery fetch & Load
+In this first attemp, I just did the minimal effort in order to get things
+working. My aim here was to get a table (the basis for the future grid) with
+all data inside it, in the form in which it was requested in the statement.
+
+In order to do that, I used jquery library in order to fetch both JSONs, and
+a function that given an id returns the outlet name string.
+So, after fetch all the data, I render it in one pass using a for loop and
+some jQuery.
+
+Code:
+
+```javascript
+    $( document ).ready(function () {
+        $.get('data/contacts.json', function (contacts) {
+            $.get('data/outlets.json', function (outlets) {
+                var getOutletName = function(outlet_id) {
+                    return $.grep(outlets, function (e) {
+                        return e.id == outlet_id;
+                    }) [0].name;
+                };
+                var $outletTable = $("#outlet-rows");
+                $.each(contacts, function (idx, item){
+                    var $newRow = $( '<tr id="row-' + idx + '"></tr>' );
+                    $newRow
+                        .append([
+                            $("<td></td>").text(item.firstName + " " + item.lastName),
+                            $("<td></td>").text(item.title),
+                            $("<td></td>").text(getOutletName(item.outletId)),
+                            $("<td></td>").text(item.profile)
+                        ]);
+                    $outletTable.append($newRow);
+                });
+            });
+        });
+    });
+ ```
+
+ Just to note that there is some inefficiency, like do a grep search for any
+ element in order to get the outlet name, some code repetition (creation of td's),
+ and some assumptions (There is all the needed data, data is never empty)
+ but take in account that this is a rapid prototype in order to get a basic
+ prototype were we can start to separate concerns and divide things.
+
+ Main problem of this approach: *Not scalable*. Is huge just with 100 records, how about when we have 1M?
+
+ Also, this approach didn't cover:
+
+ * Sortable grid
+ * Pagination

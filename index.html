@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <h1>Contact List</h1>
+    <table>
+        <thead>
+           <tr>
+               <th>Contact Name</th>
+               <th>Contact Title</th>
+               <th>Outlet name</th>
+               <th>Contact Profile</th>
+           </tr> 
+        </thead>
+        <tbody id="outlet-rows">
+        </tbody>
+    </table>
+    <script type="application/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script type="application/javascript">
+    $( document ).ready(function () {
+        $.get('data/contacts.json', function (contacts) {
+            $.get('data/outlets.json', function (outlets) {
+                var getOutletName = function(outlet_id) {
+                    return $.grep(outlets, function (e) {
+                        return e.id == outlet_id;
+                    }) [0].name;
+                };
+                var $outletTable = $("#outlet-rows");
+                $.each(contacts, function (idx, item){
+                    var $newRow = $( '<tr id="row-' + idx + '"></tr>' );
+                    $newRow
+                        .append([
+                            $("<td></td>").text(item.firstName + " " + item.lastName),
+                            $("<td></td>").text(item.title),
+                            $("<td></td>").text(getOutletName(item.outletId)),
+                            $("<td></td>").text(item.profile)
+                        ]);
+                    $outletTable.append($newRow);
+                });
+            });
+        });
+    });
+    </script>
+  </body>
+</html>
