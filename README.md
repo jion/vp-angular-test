@@ -63,3 +63,11 @@ Code:
 
  * Sortable grid
  * Pagination
+
+# Second approach: Using Angular.js
+
+In this second approach, after reading in order to refresh my memory, I converted my prototype
+in an Angular 1.x application. This is basically the same, so the same problem that before there
+is here.
+
+

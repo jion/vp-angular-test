@@ -1,44 +1,71 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:ng="http://angularjs.org" ng-app="app">
   <body>
     <h1>Contact List</h1>
-    <table>
-        <thead>
-           <tr>
-               <th>Contact Name</th>
-               <th>Contact Title</th>
-               <th>Outlet name</th>
-               <th>Contact Profile</th>
-           </tr> 
-        </thead>
-        <tbody id="outlet-rows">
-        </tbody>
-    </table>
+    <contact-table></contact-table>
     <script type="application/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
     <script type="application/javascript">
-    $( document ).ready(function () {
-        $.get('data/contacts.json', function (contacts) {
-            $.get('data/outlets.json', function (outlets) {
-                var getOutletName = function(outlet_id) {
-                    return $.grep(outlets, function (e) {
-                        return e.id == outlet_id;
-                    }) [0].name;
-                };
-                var $outletTable = $("#outlet-rows");
-                $.each(contacts, function (idx, item){
-                    var $newRow = $( '<tr id="row-' + idx + '"></tr>' );
-                    $newRow
-                        .append([
-                            $("<td></td>").text(item.firstName + " " + item.lastName),
-                            $("<td></td>").text(item.title),
-                            $("<td></td>").text(getOutletName(item.outletId)),
-                            $("<td></td>").text(item.profile)
-                        ]);
-                    $outletTable.append($newRow);
-                });
-            });
+    angular
+      .module("app",[])
+      .service("ContactList", ['$http', ContactList])
+      .directive("contactTable", contactTable)
+      .directive("contactTableBody", contactTable)
+      ;
+
+    function ContactList ($http) {
+      return {
+        fetchContacts: fetchContacts
+      }
+
+      function fetchContacts() {
+        return $http({
+          method: 'GET',
+          url: '/data/contacts.json'
+        }).then(function successCallback(response) {
+          return response.data;
+        }, function errorCallback(response) {
+          console.log("Error al cargar los datos de contacto");
         });
-    });
+      };
+    }
+
+    function contactTable () {
+      return {
+        scope: {},
+        controller: ['ContactList', '$scope', function(ContactList, $scope) {
+          /* jshint validthis: true */
+          var vm = this;
+
+          vm.contactList = [];
+
+          ContactList.fetchContacts().then(function (contactList) {
+            vm.contactList = contactList;
+          });
+        }],
+        controllerAs: 'vm',
+        template: [
+          '<table>',
+              '<thead>',
+                 '<tr>',
+                     '<th>Contact Name</th>',
+                     '<th>Contact Title</th>',
+                     '<th>Outlet name</th>',
+                     '<th>Contact Profile</th>',
+                 '</tr>' ,
+              '</thead>',
+              '<tbody id="outlet-rows">',
+              '<tr ng-repeat="contact in vm.contactList">',
+                '<td>{{contact.firstName}} {{contact.lastName}}</td>',
+                '<td>{{contact.title}}</td>',
+                '<td>{{contact.outletId}}</td>',
+                '<td>{{contact.profile}}</td>',
+              '</tr>',
+              '</tbody>',
+          '</table>',
+        ].join('')
+      }
+    }
     </script>
   </body>
 </html>
