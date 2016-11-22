@@ -1,71 +1,20 @@
 <!doctype html>
 <html lang="en" xmlns:ng="http://angularjs.org" ng-app="app">
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+    <link href="styles.css" rel="stylesheet">
+  </head>
   <body>
     <h1>Contact List</h1>
     <contact-table></contact-table>
-    <script type="application/javascript" src="https://code.jquery.com/jquery-2.2.4.js"></script>
+
+    <!-- Manually sorted scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
-    <script type="application/javascript">
-    angular
-      .module("app",[])
-      .service("ContactList", ['$http', ContactList])
-      .directive("contactTable", contactTable)
-      .directive("contactTableBody", contactTable)
-      ;
-
-    function ContactList ($http) {
-      return {
-        fetchContacts: fetchContacts
-      }
-
-      function fetchContacts() {
-        return $http({
-          method: 'GET',
-          url: '/data/contacts.json'
-        }).then(function successCallback(response) {
-          return response.data;
-        }, function errorCallback(response) {
-          console.log("Error al cargar los datos de contacto");
-        });
-      };
-    }
-
-    function contactTable () {
-      return {
-        scope: {},
-        controller: ['ContactList', '$scope', function(ContactList, $scope) {
-          /* jshint validthis: true */
-          var vm = this;
-
-          vm.contactList = [];
-
-          ContactList.fetchContacts().then(function (contactList) {
-            vm.contactList = contactList;
-          });
-        }],
-        controllerAs: 'vm',
-        template: [
-          '<table>',
-              '<thead>',
-                 '<tr>',
-                     '<th>Contact Name</th>',
-                     '<th>Contact Title</th>',
-                     '<th>Outlet name</th>',
-                     '<th>Contact Profile</th>',
-                 '</tr>' ,
-              '</thead>',
-              '<tbody id="outlet-rows">',
-              '<tr ng-repeat="contact in vm.contactList">',
-                '<td>{{contact.firstName}} {{contact.lastName}}</td>',
-                '<td>{{contact.title}}</td>',
-                '<td>{{contact.outletId}}</td>',
-                '<td>{{contact.profile}}</td>',
-              '</tr>',
-              '</tbody>',
-          '</table>',
-        ].join('')
-      }
-    }
-    </script>
+    <script src="/app/app.module.js"></script>
+    <script src="/app/services/ContactList.service.js"></script>
+    <script src="/app/services/RecursionHelper.factory.js"></script>
+    <script src="/app/directives/contactTableHeaderTitle.directive.js"></script>
+    <script src="/app/directives/contactTableBody.directive.js"></script>
+    <script src="/app/directives/contactTable.directive.js"></script>
   </body>
 </html>
