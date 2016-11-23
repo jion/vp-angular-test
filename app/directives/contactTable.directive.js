@@ -44,9 +44,22 @@ function contactTable (RecursionHelper) {
       vm.sortColumn  = '';
       vm.reverse = false;
 
+      vm.filteredContactList = [];
+      vm.currentPage = 1;
+      vm.numPerPage = 10;
+
       vm.setSortColumn = setSortColumn;
       vm.getSortRule = function () { return sortRules[vm.sortColumn] || ''; };
       vm.getCaret = getCaret;
+
+      $scope.$watch("vm.contactList.length + vm.currentPage + vm.numPerPage", function() {
+	var begin = ((vm.currentPage - 1) * vm.numPerPage)
+	  , end = begin + vm.numPerPage;
+
+	vm.filteredContactList = vm.contactList.slice(begin, end);
+      });
+
+      window.next = function(){$scope.$apply(()=>vm.currentPage++);}
 
       function setSortColumn (columnName) {
         if (vm.sortColumn == columnName) {
@@ -70,7 +83,7 @@ function contactTable (RecursionHelper) {
 
       ContactList.fetchContacts().then(function (contactList) {
 
-	vm.contactList = contactList;
+	vm.contactList = contactList || [];
       });
     }],
     controllerAs: 'vm',
@@ -83,7 +96,7 @@ function contactTable (RecursionHelper) {
 			    'sort-criteria="column[\'sort-criteria\'" />',
 	'</thead>',
 	'<tbody id="outlet-rows">',
-	'<tr ng-repeat="contact in vm.contactList | orderBy:vm.getSortRule():vm.reverse">',
+	'<tr ng-repeat="contact in vm.filteredContactList | orderBy:vm.getSortRule():vm.reverse">',
 	  '<td>{{contact.firstName}} {{contact.lastName}}</td>',
 	  '<td>{{contact.title}}</td>',
 	  '<td>{{contact.outletId}}</td>',
