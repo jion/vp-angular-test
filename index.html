@@ -1,14 +1,23 @@
 <!doctype html>
 <html lang="en" xmlns:ng="http://angularjs.org" ng-app="app">
   <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css"  media="screen,projection"/>
+    <!--Some custom styles -->
     <link href="styles.css" rel="stylesheet">
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body>
     <h1>Contact List</h1>
     <contact-table></contact-table>
-
+    <paginator current='1' total='10'></paginator>
     <!-- Manually sorted scripts -->
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
     <script src="/app/app.module.js"></script>
     <script src="/app/services/ContactList.service.js"></script>
@@ -16,5 +25,6 @@
     <script src="/app/directives/contactTableHeaderTitle.directive.js"></script>
     <script src="/app/directives/contactTableBody.directive.js"></script>
     <script src="/app/directives/contactTable.directive.js"></script>
+    <script src="/app/directives/paginator.directive.js"></script>
   </body>
 </html>
