@@ -11,7 +11,7 @@ function contactTable (RecursionHelper) {
       previousPage: '=',
       nextPage: '=',
     },
-    controller: ['ContactList', '$scope', function(ContactList, $scope) {
+    controller: ['ContactList', '$filter', '$scope', function(ContactList, $filter, $scope) {
       /* jshint validthis: true */
       var vm = this;
 
@@ -61,11 +61,12 @@ function contactTable (RecursionHelper) {
       vm.getSortRule = function () { return sortRules[vm.sortColumn] || ''; };
       vm.getCaret = getCaret;
 
-      $scope.$watch("vm.contactList.length + vm.currentPage + vm.numPerPage", function() {
+      $scope.$watch("[vm.contactList.length, vm.currentPage, vm.numPerPage, vm.reverse]", function() {
         var begin = ((vm.currentPage - 1) * vm.numPerPage)
           , end = begin + vm.numPerPage;
-
-        vm.filteredContactList = vm.contactList.slice(begin, end);
+        
+        var reorderedList = $filter('orderBy')(vm.contactList, vm.sortColumn, vm.reverse);
+        vm.filteredContactList = reorderedList.slice(begin, end);
       });
 
       window.next = function(){$scope.$apply(()=>vm.currentPage++);}
@@ -120,6 +121,7 @@ function contactTable (RecursionHelper) {
             '</tr>',
           '</tbody>',
       '</table>',
+      '<paginator current="vm.currentPage" total="vm.filteredContactList.length"></paginator>',
     ].join(''),
     compile: function(element) {
       return RecursionHelper.compile(element);
