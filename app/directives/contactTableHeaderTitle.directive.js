@@ -9,24 +9,17 @@ function contactTableHeaderTitle () {
   return {
     restrict: 'A',
     scope: {
-      'name': '@',
-      'description': '=',
-      'sort-criteria': '=',
+      sortFn: '<',
+      id:   '@',
+      description:  '=',
+      sortCriteria: '=',
     },
     controller: function () {
       var vm = this;
-
-      vm.getCaret = getCaret;
-
-      function getCaret (columnName) {
-        if( vm.sortColumn == columnName ) {
-          return vm.reverse ? '▼' : '▲';
-        }
-        return '';
-      }
     },
+    controllerAs: 'vm',
     template: [
-      '<th><a href="#" ng-click="vm.setAsSortColumn()">{{ description }} {{ vm.getCaret() }}</a></th>',
+      '<th><a href ng-click="sortFn(name)">{{ description }} <i class="tiny material-icons">swap_vert</i></a></th>',
     ].join('')
   }
 }
