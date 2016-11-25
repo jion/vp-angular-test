@@ -53,7 +53,7 @@ function paginator (Utils) {
         }],
 
         template: [
-          '<ul class="pagination">',
+          '<ul class="pagination right">',
             // <
             '<li ng-class="vm.leftArrowClasses()">',
                 '<a href="#!" ng-click="vm.clickPrev()"><i class="material-icons">chevron_left</i></a>',
@@ -61,7 +61,7 @@ function paginator (Utils) {
 
             // 1 2 3 ..
             '<li ng-repeat="i in vm.Utils.getRange(total) track by $index" ng-class="vm.getLiClass($index+1)">',
-              '<a href ng-click="vm.changePage($index+1)">{{ $index + 1 }}</a>',
+              '<a href="#!" ng-click="vm.changePage($index+1)">{{ $index + 1 }}</a>',
             '</li>',
 
             // >

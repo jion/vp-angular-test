@@ -1,3 +1,10 @@
-html,body {
+.content {
 	margin: 20px 30px;
 }
+
+.table-icon__both {
+	content: "";
+}
+.table-icon__asc {}
+.table-icon__desc {}
+
