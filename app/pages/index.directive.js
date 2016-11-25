@@ -11,53 +11,102 @@
       controller: ['$scope','$filter','ContactList', function ($scope, $filter, ContactList) {
         var vm = this;
 
-        vm.currentPage = 1;
-        vm.itemsPerPage = 10;
-        vm.sortByColumn = '';
+        // Pagination
+        vm.currentPage    =  1;
+        vm.totalPages     =  1;
+        vm.itemsPerPage   = 10;
+        vm.sortByColumn   = '';
         vm.reverseSorting = false;
-        vm.activeColumns= [];
 
-        vm.getCurrentPageData = function(){};
-        vm.getTotalPages = function(){ return Math.ceil( rawData.length / vm.itemsPerPage );};
+        vm.activeColumns  = [
+          {
+            title: "Name",
+            content: function (e) { return e.firstName + ' ' + e.lastName; },
+            sortCriteria: ["firstName", "lastName"],
+          },
+          {
+            title: "Title",
+            content: "title",
+            sortCriteria: "title",
+          },
+          {
+            title: "Outlet name",
+            content: function (e) { return e.outletName; },
+            sortCriteria: "outletName",
+          },
+          {
+            title: "Contact Profile",
+            content: "profile",
+            sortCriteria: "profile",
+          },
+        ];
+
 
         // Constructor
-        var rawData = [],
-            orderedData = [];
+        vm.rawData = [],
+        vm.flattenData = [];
+        vm.orderedData = [];
         vm.filteredData = [];
 
-        $scope.$watch('[rawData, vm.sortByColumn, vm.reverseSorting]', generateOrderedData);
-        $scope.$watch('[orderedData, vm.currentPage]', generateFilteredData );
+        $scope.$watch('vm.rawData', generateFlattenedData);
+        $scope.$watch('vm.flattenData', generateOrderedData);
+        $scope.$watch('vm.sortByColumn', generateOrderedData);
+        $scope.$watch('vm.reverseSorting', generateOrderedData);
+        $scope.$watch('vm.orderedData', generateFilteredData);
+        $scope.$watch('vm.currentPage', generateFilteredData);
 
         ////
-        ContactList.fetchContacts().then(populateContactList);
+        ContactList.fetchContacts()
+          .then(populateContactList)
+          .then(initializePagination)
+        ;
         ////
 
         ///////////////////////////////////////////////////////////////////////
         // Function definitions
         ///////////////////////////////////////////////////////////////////////
+        function generateFlattenedData() {
+          ContactList.fetchOutlets()
+            .then(function(outlets) {
+              outlets = outlets.reduce(function(map, obj) {
+                map[obj.id] = obj.name;
+                return map;
+              }, {});
+
+              vm.flattenData = vm.rawData.map(function(item) {
+                item.outletName = outlets[item.outletId];
+                return item;
+              });
+            });
+        }
         function generateOrderedData() {
-          orderedData = $filter('orderBy')(rawData, vm.sortByColumn, vm.reverseSorting);
+          vm.orderedData = $filter('orderBy')(vm.flattenData, vm.sortByColumn, vm.reverseSorting);
         }
 
         function generateFilteredData() {
           var begin = ((vm.currentPage - 1) * vm.itemsPerPage)
             , end   = begin + vm.itemsPerPage;
 
-          vm.filteredData = orderedData.slice(begin, end);
+          vm.filteredData = vm.orderedData.slice(begin, end);
         }
         
-        $scope.$watch('vm.filteredData', function () {console.log(vm.filteredData)});
-
         function populateContactList (contactList) {
-          rawdata = contactList || [];
+          return vm.rawData = contactList || [];
         }
+        function initializePagination (contactList) {
+          vm.totalPages  = getTotalPages();
+          vm.currentPage = 1;
+        }
+        function getTotalPages () {
+          return Math.ceil( vm.rawData.length / vm.itemsPerPage );
+        };
       }],
       controllerAs: 'vm',
 
 
       template: [
-        '<paginator current="vm.currentPage" total="vm.getTotalPages()" />',
-        '<dinamyc-table data="vm.filteredData" columns="vm.activeColumns" sortedBy="vm.sortByColumn" reverseOrder="vm.reverseSorting" />'
+        '<paginator current="vm.currentPage" total="vm.totalPages" />',
+        '<dynamic-table data="vm.filteredData" columns="vm.activeColumns" sorted-by="vm.sortByColumn" reverse-order="vm.reverseSorting" />'
       ].join(''),
     };
   }
