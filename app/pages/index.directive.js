@@ -14,7 +14,7 @@
         // Pagination
         vm.currentPage    =  1;
         vm.totalPages     =  1;
-        vm.itemsPerPage   = 10;
+        vm.itemsPerPage   = 25;
         vm.sortByColumn   = '';
         vm.reverseSorting = false;
 
@@ -47,6 +47,14 @@
         vm.flattenData = [];
         vm.orderedData = [];
         vm.filteredData = [];
+
+        /**
+         *  Step 1. We receive the data
+         *  Step 2. We resolve foreigns key references (outletId -> outletName)
+         *  Step 3. We sort the data
+         *  Step 4. We cut off the current page of data
+         *  Step 5. We show the data
+         */
 
         $scope.$watch('vm.rawData', generateFlattenedData);
         $scope.$watch('vm.flattenData', generateOrderedData);
@@ -106,7 +114,10 @@
 
       template: [
         '<paginator current="vm.currentPage" total="vm.totalPages" />',
-        '<dynamic-table data="vm.filteredData" columns="vm.activeColumns" sorted-by="vm.sortByColumn" reverse-order="vm.reverseSorting" />'
+        '<dynamic-table data="vm.filteredData"',
+                      ' columns="vm.activeColumns"',
+                      ' sorted-by="vm.sortByColumn"',
+                      ' reverse-order="vm.reverseSorting" />'
       ].join(''),
     };
   }

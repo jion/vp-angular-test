@@ -12,20 +12,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body>
-    <h1>Contact List</h1>
-    <!-- <contact-table></contact-table> -->
-    <index-page></index-page>
-    <!-- Manually sorted scripts -->
+    <header>
+      <nav>
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo">My Agenda</a>
+          <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="/">Contact List</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <div class="col s12 m7 l10">
+      <index-page></index-page>
+    </div>
     <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.js"></script>
+
+    <!-- Manually sorted scripts -->
     <script src="/app/app.module.js"></script>
     <script src="/app/services/Utils.factory.js"></script>
     <script src="/app/services/ContactList.service.js"></script>
-    <script src="/app/services/RecursionHelper.factory.js"></script>
-    <script src="/app/directives/contactTableHeaderTitle.directive.js"></script>
-    <script src="/app/directives/contactTableBody.directive.js"></script>
-    <script src="/app/directives/contactTable.directive.js"></script>
     <script src="/app/directives/paginator.directive.js"></script>
     <script src="/app/directives/dynamicTable.directive.js"></script>
     <script src="/app/pages/index.directive.js"></script>

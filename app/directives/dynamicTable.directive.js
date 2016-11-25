@@ -19,7 +19,13 @@
         var vm = this;
         var activeColumn = 0;
 
-        vm.getDescription = function (column) {
+        vm.getColumnTitle = getColumnTitle;
+        vm.getContent   = getContent;
+        vm.setSortedBy  = setSortedBy;
+        vm.isActive     = isActive;
+        vm.getClassIcon = getClassIcon;
+        
+        function getColumnTitle (column) {
           if (typeof column != 'object' || column == null)
             return;
 
@@ -29,7 +35,7 @@
           return column.title;
         };
 
-        vm.getContent = function (column, row) {
+        function getContent (column, row) {
           if (typeof column != 'object' || column == null)
             return;
 
@@ -39,7 +45,7 @@
           return row[column.content];
         };
 
-        vm.setSortedBy = function (column, $index) {
+        function setSortedBy (column, $index) {
           if ( vm.isActive($index) ) {
             $scope.reverseOrder = !$scope.reverseOrder;
           } else {
@@ -48,9 +54,17 @@
           }
         };
 
-        vm.isActive = function ($index) {
+        function isActive ($index) {
           return activeColumn === $index;
         };
+
+        function getClassIcon ($index) {
+          if (vm.isActive($index)) {
+            return "expand_" + ( $scope.reverseOrder ? 'more' : 'less' );
+          } else {
+            return '';
+          }
+        }
 
       }],
       controllerAs: 'vm',
@@ -60,7 +74,7 @@
           '<thead>',
             '<tr>',
               '<th ng-repeat="column in columns track by $index">',
-                '<a href="#!" ng-click="vm.setSortedBy(column,$index+1)">{{ vm.getDescription(column) }}</a>',
+                '<a href="#!" ng-click="vm.setSortedBy(column,$index+1)">{{ vm.getColumnTitle(column) }}<i class="tiny material-icons">{{ vm.getClassIcon($index+1) }}</i></a>',
               '</th>',
             '</tr>',
           '</thead>',

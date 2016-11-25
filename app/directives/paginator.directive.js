@@ -53,7 +53,7 @@ function paginator (Utils) {
         }],
 
         template: [
-          '<ul class="pagination">',
+          '<ul class="pagination right">',
             // <
             '<li ng-class="vm.leftArrowClasses()">',
                 '<a href="#!" ng-click="vm.clickPrev()"><i class="material-icons">chevron_left</i></a>',
