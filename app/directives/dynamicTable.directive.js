@@ -24,6 +24,7 @@
         vm.setSortedBy  = setSortedBy;
         vm.isActive     = isActive;
         vm.getClassIcon = getClassIcon;
+        vm.getColumnClass = getColumnClass;
         
         function getColumnTitle (column) {
           if (typeof column != 'object' || column == null)
@@ -66,6 +67,12 @@
           }
         }
 
+        function getColumnClass($index) {
+          if ($index == 3)
+            return 'table__profile-column';
+          return '';
+        }
+
       }],
       controllerAs: 'vm',
 
@@ -73,7 +80,7 @@
         '<table>',
           '<thead>',
             '<tr>',
-              '<th ng-repeat="column in columns track by $index">',
+              '<th ng-repeat="column in columns track by $index" ng-class="vm.getColumnClass($index)">',
                 '<a href="#!" ng-click="vm.setSortedBy(column,$index+1)">{{ vm.getColumnTitle(column) }}<i class="tiny material-icons">{{ vm.getClassIcon($index+1) }}</i></a>',
               '</th>',
             '</tr>',

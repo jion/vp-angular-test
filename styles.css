@@ -1,10 +1,13 @@
+table {
+	table-layout: fixed;
+}
+.table-container {
+	margin: 20px 30px;
+}
+.table__profile-column {
+	width: 50%;
+}
 .content {
 	margin: 20px 30px;
 }
-
-.table-icon__both {
-	content: "";
-}
-.table-icon__asc {}
-.table-icon__desc {}
 

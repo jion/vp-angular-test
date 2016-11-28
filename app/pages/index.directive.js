@@ -113,11 +113,13 @@
 
 
       template: [
-        '<paginator current="vm.currentPage" total="vm.totalPages" />',
-        '<dynamic-table data="vm.filteredData"',
-                      ' columns="vm.activeColumns"',
-                      ' sorted-by="vm.sortByColumn"',
-                      ' reverse-order="vm.reverseSorting" />'
+        '<div class="table-container">',
+          '<paginator current="vm.currentPage" total="vm.totalPages" />',
+          '<dynamic-table data="vm.filteredData"',
+                        ' columns="vm.activeColumns"',
+                        ' sorted-by="vm.sortByColumn"',
+                        ' reverse-order="vm.reverseSorting" />',
+        '</div>',
       ].join(''),
     };
   }
