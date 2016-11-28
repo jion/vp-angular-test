@@ -1,10 +1,20 @@
+table {
+	table-layout: fixed;
+}
+table > tbody > tr:nth-child(odd) {
+	background-color: #f2f2f2;
+}
+table > tbody > tr:hover {
+	background-color: #ffff99;
+	transition: background-color .50s ease;
+}
+.table-container {
+	margin: 20px 30px;
+}
+.table__profile-column {
+	width: 50%;
+}
 .content {
 	margin: 20px 30px;
 }
-
-.table-icon__both {
-	content: "";
-}
-.table-icon__asc {}
-.table-icon__desc {}
 
