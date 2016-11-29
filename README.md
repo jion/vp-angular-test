@@ -70,4 +70,4 @@ In this second approach, after reading in order to refresh my memory, I converte
 in an Angular 1.x application. This is basically the same, so the same problem that before there
 is here.
 
-
+Note: This readme is WIP. **Code is in a more advanced stage**
